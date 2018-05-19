@@ -1,6 +1,7 @@
+//module for samples
 class AudioBufferPlayer {
 
-  constructor( options ) {
+  constructor(options) {
 
     this.audioContext = options.audioContext;
 
@@ -9,61 +10,61 @@ class AudioBufferPlayer {
 
   }
 
-  start( buffer, offset = 0, time = this.audioContext.currentTime, duration, loop = false, loopStartTime = 0, loopEndTime ) {
+  //change these values to change the loop
+  start(buffer, offset = 0, time = this.audioContext.currentTime, duration, loop = false, loopStartTime = 0, loopEndTime) {
     let
-    bufferSource = this.audioContext.createBufferSource();
+      bufferSource = this.audioContext.createBufferSource();
 
     duration = duration || buffer.duration;
     bufferSource.loop = loop;
     bufferSource.buffer = buffer;
     bufferSource.startTime = time;
 
-    var endHandler = this.createEndHandler( bufferSource );
+    var endHandler = this.createEndHandler(bufferSource);
     bufferSource.onended = endHandler;
 
-    if( loop ) {
-    
+    if (loop) {
+
       loopEndTime = loopEndTime || buffer.duration;
 
       bufferSource.loopEnd = loopEndTime;
       bufferSource.loopStart = loopStartTime;
-      bufferSource.start( time, offset * duration, duration );
+      bufferSource.start(time, offset * duration, duration);
 
-      if ( duration !== 0 )
-          bufferSource.stop( time + duration );
-    
+      if (duration !== 0)
+        bufferSource.stop(time + duration);
+
+    } else {
+
+      bufferSource.start(time, offset * duration, duration);
+
     }
-    else {
 
-      bufferSource.start( time, offset * duration, duration );
-
-    }
-
-    this.bufferSourceMap[ bufferSource ] = bufferSource;
+    this.bufferSourceMap[bufferSource] = bufferSource;
 
     return bufferSource;
-    
-  }
-
-  createEndHandler( bufferSource ) {
-
-    return () => this.stop( bufferSource );
 
   }
 
-  stop( bufferSource ) {
+  createEndHandler(bufferSource) {
 
-    if ( this.bufferSourceMap.get( bufferSource ) ) {
+    return () => this.stop(bufferSource);
 
-      if ( ( this.audioContext.currentTime - bufferSource.startTime ) > 0.01 ) { 
-      
-        bufferSource.stop( this.audioContext.currentTime );
-      
+  }
+
+  stop(bufferSource) {
+
+    if (this.bufferSourceMap.get(bufferSource)) {
+
+      if ((this.audioContext.currentTime - bufferSource.startTime) > 0.01) {
+
+        bufferSource.stop(this.audioContext.currentTime);
+
       }
 
       bufferSource.disconnect();
- 
-      this.bufferSourceMap.delete( bufferSource );
+
+      this.bufferSourceMap.delete(bufferSource);
 
     }
 
@@ -71,11 +72,11 @@ class AudioBufferPlayer {
 
   stopAll() {
 
-    this.bufferSourceMap.forEach( function( bufferSource ) {
-      
-      stop( bufferSource )
+    this.bufferSourceMap.forEach(function(bufferSource) {
 
-    } );
+      stop(bufferSource)
+
+    });
 
   }
 

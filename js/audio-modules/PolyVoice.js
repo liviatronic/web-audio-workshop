@@ -31,16 +31,16 @@ class PolyVoice {
 
   }
 
-  start( time = this.audioContext.currentTime, voiceId ){
+  start( time = this.audioContext.currentTime ){
 
     //cycle through the voices
-    this.currentVoiceId = voiceId || ( this.currentVoiceId + 1 ) % this.voiceCount;
+    this.currentVoiceId = ( this.currentVoiceId + 1 ) % this.voiceCount;
     
     this.currentVoice = this.voiceMap.get( this.currentVoiceId );
 
     this.currentVoice.start( time );
 
-    return this.currentVoice;
+    return this.currentVoiceId;
 
   }
 
@@ -48,7 +48,7 @@ class PolyVoice {
 
     let vId = voiceId || this.currentVoice
 
-    voiceMap.get( vId ).stop( time );
+    voiceMap.get( currentVoice ).stop( time );
 
   }
 
